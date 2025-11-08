@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- app name -->
+    <string name="app_name">Rover App</string>
+    <string name="notification_channel_name">Rover Alerts</string>
+</resources>

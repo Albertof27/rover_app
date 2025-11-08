@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "655010352909",
+    "project_id": "rover-app-146f4",
+    "storage_bucket": "rover-app-146f4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:655010352909:android:059eaa5c0f38ec0aaeaa44",
+        "android_client_info": {
+          "package_name": "com.albertoflores.roverapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcMXgBQk12vUGFMbDVI2KEmUTygGxO1A8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
