@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../state/ble_state.dart';
 import '../state/ble_controller_provider.dart' as providers;
+import 'trip_logger_page.dart';
 
 class RoverHome extends ConsumerWidget {
   const RoverHome({super.key});
@@ -32,7 +33,22 @@ class RoverHome extends ConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Rover Status')),
+      appBar: AppBar(
+        title: const Text('Rover Status'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.map_outlined),
+            tooltip: 'Trip Logger',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const TripLoggerPage()),
+              );
+            },
+          ),
+        ],
+      ),
+
+
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 420),

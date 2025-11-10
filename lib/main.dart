@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:rover_app/state/auth_providers.dart';
+import 'state/auth_providers.dart';
 import 'ui/login_screen.dart';
 import 'ui/home.dart';
 import 'firebase_options.dart';
+import 'app_services.dart';
 
 Future<void> main() async {
   // Ensures Flutter widgets are ready before async initialization
@@ -14,6 +15,8 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // Initialize Hive, TripRepository, and TripRecorder before app launch
+  await AppServices.init();
 
   // Start your app wrapped in Riverpod ProviderScope
   runApp(const ProviderScope(child: MyApp()));
