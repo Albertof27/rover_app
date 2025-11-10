@@ -16,7 +16,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   // Initialize Hive, TripRepository, and TripRecorder before app launch
-  await AppServices.init();
+  await AppServices.initHiveOnce();
 
   // Start your app wrapped in Riverpod ProviderScope
   runApp(const ProviderScope(child: MyApp()));
@@ -29,6 +29,17 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Watch Firebase auth state (you’ll define authUserProvider in auth_providers.dart)
     final auth = ref.watch(authUserProvider);
+
+    auth.whenData((user) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (user != null) {
+          await AppServices.I.initForUser(user.uid);
+        } else {
+          await AppServices.I.clearForSignOut();
+        }
+      });
+    });
+
 
     return MaterialApp(
       title: 'Rover App',

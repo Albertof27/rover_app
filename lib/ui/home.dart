@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../state/ble_state.dart';
-import '../state/ble_controller_provider.dart' as providers;
-import 'trip_logger_page.dart';
+
+import 'package:rover_app/state/ble_state.dart';
+import 'package:rover_app/state/ble_controller_provider.dart' as providers;
+import 'package:rover_app/ui/trip_logger_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class RoverHome extends ConsumerWidget {
   const RoverHome({super.key});
@@ -43,6 +45,18 @@ class RoverHome extends ConsumerWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const TripLoggerPage()),
               );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Log out',
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Signed out')),
+                );
+              }
             },
           ),
         ],
