@@ -26,8 +26,8 @@ class TripRepository {
   }
 
   Future<void> close() async {
-    await _trips.close();
-    await _points.close();
+    if (_trips.isOpen) await _trips.close();
+    if (_points.isOpen) await _points.close();
   }
 
   Stream<List<Trip>> getTripsStream() async* {

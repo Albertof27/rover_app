@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rover_app/state/ble_state.dart';
 import 'package:rover_app/state/ble_controller_provider.dart' as providers;
 import 'package:rover_app/ui/trip_logger_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import '../state/auth_providers.dart';
 
 class RoverHome extends ConsumerWidget {
   const RoverHome({super.key});
@@ -51,7 +51,7 @@ class RoverHome extends ConsumerWidget {
             icon: const Icon(Icons.logout),
             tooltip: 'Log out',
             onPressed: () async {
-              await FirebaseAuth.instance.signOut();
+              await ref.read(authServiceProvider).signOut();
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Signed out')),
@@ -78,7 +78,7 @@ class RoverHome extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
-                      color: statusColor().withValues(alpha: 0.15),
+                      color: statusColor().withOpacity(0.15),
                       borderRadius: BorderRadius.circular(999),
                       border: Border.all(color: statusColor(), width: 1),
                     ),

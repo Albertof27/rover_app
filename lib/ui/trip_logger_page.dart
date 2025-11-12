@@ -76,16 +76,19 @@ class TripLoggerPage extends ConsumerWidget {
               loading: () => const LinearProgressIndicator(),
               error: (e, s) => Text('Error loading trips: $e'),
               data: (trips) {
+                final ids = trips.map((t) => t.id).toSet().toList();
                 // If selected ID is null or no longer exists, try to select the most recent one
-                if (selectedTripId == null && trips.isNotEmpty) {
+                if (selectedTripId == null && ids.isNotEmpty) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    ref.read(selectedTripIdProvider.notifier).state = trips.first.id;
+                    ref.read(selectedTripIdProvider.notifier).state = ids.first;
                   });
                 }
+                final safeValue = ids.contains(selectedTripId) ? selectedTripId : null;
                 
                 return DropdownButton<String>(
+                  key: ValueKey('trip-dd-${AppServices.I.currentUid ?? "nouser"}'),
                   isExpanded: true,
-                  value: selectedTripId,
+                  value: safeValue,
                   hint: const Text('Select a Trip'),
                   items: trips.map((t) {
                     final subtitle = t.isActive
