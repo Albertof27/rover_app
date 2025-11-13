@@ -1,25 +1,54 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'models/trip.dart';
-import 'models/track_point.dart';
-import 'repo/trip_repository.dart';
-import 'services/trip_recorder.dart';
+import 'package:hive/hive.dart';
+import 'package:rover_app/models/trip.dart';
+import 'package:rover_app/models/track_point.dart';
+import 'package:rover_app/repo/trip_repository.dart';
+import 'package:rover_app/services/trip_recorder.dart';
 
 class AppServices {
   AppServices._();
   static final AppServices I = AppServices._();
 
-  late final TripRepository repo;
-  late final TripRecorder recorder;
+  TripRepository? _repo;
+  TripRecorder? _recorder;
+  String? _currentUid;
 
-  static Future<void> init() async {
+  TripRepository get repo => _repo!;
+  TripRecorder get recorder => _recorder!;
+  String? get currentUid => _currentUid;
+
+  static Future<void> initHiveOnce() async {
     await Hive.initFlutter();
-    Hive.registerAdapter(TripAdapter());
-    Hive.registerAdapter(TrackPointAdapter());
 
-    final repo = await TripRepository.init();
+    if (!Hive.isAdapterRegistered(1)) {
+      Hive.registerAdapter(TripAdapter());
+    }
+    if (!Hive.isAdapterRegistered(2)) {
+       Hive.registerAdapter(TrackPointAdapter());
+    }
+  }
+
+  /// Initialize services for a specific user.
+  Future<void> initForUser(String uid) async {
+    if (_currentUid == uid && _repo != null && _recorder != null) return;
+
+    // Close previous user's boxes if switching users
+    await _repo?.close();
+
+    final repo = await TripRepository.initForUser(uid);
     final recorder = TripRecorder(repo);
 
-    I.repo = repo;
-    I.recorder = recorder;
+    _repo = repo;
+    _recorder = recorder;
+    _currentUid = uid;
+  }
+
+  /// Clear references when user signs out.
+  Future<void> clearForSignOut() async {
+    await _repo?.close();
+    _repo = null;
+    _recorder = null;
+    _currentUid = null;
   }
 }
+
